@@ -5,7 +5,7 @@ namespace ScheduleCurseWork
 {
 	public partial class MainForm : Form
 	{
-		static string dateTimeFormat = "dddd MMMM dd yyyy";
+		static string dateTimeFormat = "ddddMMMM d yyyy";
 		ScheduleManager EventList = new ScheduleManager();
 		DateTime dtfilter = DateTime.MinValue;
 		public MainForm()
@@ -14,7 +14,7 @@ namespace ScheduleCurseWork
 
 
 			dateTimePickerFilter.CustomFormat = dateTimeFormat;
-			dateTimePickerFilter.MinDate = DateTime.Now;
+			dateTimePickerFilter.MinDate = DateTime.Now.Date;
 			refreshListOfEvents();
 		}
 
@@ -25,9 +25,18 @@ namespace ScheduleCurseWork
 
 		private void refreshListOfEvents()
 		{
-			List<Event> searchedbydate = EventList.SearchByDate(dtfilter);
+			if (checkBoxFilter.Checked)
+			{
+				dtfilter = dateTimePickerFilter.Value;
+			}
+			else
+			{
+				dtfilter = DateTime.MinValue;
+			}
+			List<Event> searchedbydate = EventList.SearchByDate(dtfilter, checkboxShowAllEvents.Checked);
 			eventBindingSource.DataSource = searchedbydate;
 			dataGridViewSchedule.ClearSelection();
+			timer1.Start();
 		}
 		private void btnEdit_Click(object sender, EventArgs e)
 		{
@@ -62,11 +71,33 @@ namespace ScheduleCurseWork
 		}
 		private void dataGridViewSchedule_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			if (dataGridViewSchedule.Columns[e.ColumnIndex].Name.Contains("duration"))
+			if (dataGridViewSchedule.Columns[e.ColumnIndex].Name == "durationDataGridViewTextBoxColumn")
 			{
 				string timeValue = ParseDurationToString((int)e.Value);
 				e.Value = timeValue;
 				e.FormattingApplied = true;
+			}
+			if (dataGridViewSchedule.Columns[e.ColumnIndex].Name == "isDoneDataGridViewCheckBoxColumn")
+			{
+				if (e.Value != null && (bool)e.Value)
+				{
+					dataGridViewSchedule.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(23, 50, 23);
+				}
+				else
+				{
+					dataGridViewSchedule.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(23, 23, 23);
+				}
+			}
+			if (dataGridViewSchedule.Columns[e.ColumnIndex].Name == "isMissedDataGridViewCheckBoxColumn")
+			{
+				if (e.Value != null && (bool)e.Value)
+				{
+					dataGridViewSchedule.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(50, 23, 23);
+				}
+				else
+				{
+					dataGridViewSchedule.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(23, 23, 23);
+				}
 			}
 		}
 		private string ParseDurationToString(int duration)
@@ -93,24 +124,22 @@ namespace ScheduleCurseWork
 			{
 
 				Event curev = EventList.AllEvents[dataGridViewSchedule.SelectedRows[0].Index];
-				MessageBox.Show(curev.IsDone + "");
 				EventList.AllEvents[dataGridViewSchedule.SelectedRows[0].Index].IsDone = !curev.IsDone;
 			}
 
 			refreshListOfEvents();
 		}
 
-		private void checkBoxFilter_CheckedChanged(object sender, EventArgs e)
+		private void TotalUpdatingEventsHandler(object sender, EventArgs e)
 		{
-			if (checkBoxFilter.Checked)
-			{
-				dtfilter = dateTimePickerFilter.Value;
-			}
-			else
-			{
-				dtfilter = DateTime.MinValue;
-			}
-			refreshListOfEvents() ;
+			refreshListOfEvents();
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			EventList.AllEventsStatusIsMissedUpdate();
+			scheduleManagerBindingSource.DataSource = new ScheduleManager();
+			scheduleManagerBindingSource.DataSource = EventList;
 		}
 	}
 }

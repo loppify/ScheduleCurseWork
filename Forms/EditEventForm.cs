@@ -15,7 +15,7 @@ namespace ScheduleCurseWork.Forms
 		public EditEventForm(Event curevent)
 		{
 			InitializeComponent();
-			dateTimePickerDateTime.CustomFormat = @"dddd MMMM dd yyyy    hh:mm";
+			dateTimePickerDateTime.CustomFormat = @"dddd MMMM dd yyyy    HH:mm";
 
 
 			this.curevent = curevent;
@@ -32,7 +32,7 @@ namespace ScheduleCurseWork.Forms
 			this.eventList = eventList;
 			InitializeComponent();
 			adding = true;
-			dateTimePickerDateTime.CustomFormat = @"dddd MMMM dd yyyy    hh:mm";
+			dateTimePickerDateTime.CustomFormat = @"dddd MMMM dd yyyy    HH:mm";
 
 
 			curevent = new Event();
