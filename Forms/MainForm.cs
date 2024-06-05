@@ -7,16 +7,18 @@ namespace ScheduleCurseWork
 	{
 		private static string cloumnIdName = "idDataGridViewTextBoxColumn";
 		static string dateTimeFormat = "ddddMMMM d yyyy";
-		ScheduleManager EventList = new ScheduleManager();
+		ScheduleManager EventList = new ScheduleManager().loadData();
 		DateTime dtfilter = DateTime.MinValue;
 		public MainForm()
 		{
 			InitializeComponent();
-
+			
 
 			dateTimePickerFilter.CustomFormat = dateTimeFormat;
 			dateTimePickerFilter.MinDate = DateTime.Now.Date;
+			
 			refreshListOfEvents();
+			
 		}
 
 		private void btnAdd_Click(object sender, EventArgs e)
@@ -162,7 +164,8 @@ namespace ScheduleCurseWork
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			EventList = EventList.loadData();
-			refreshListOfEvents();
+			if(EventList.AllEvents.Count>0) 
+				refreshListOfEvents();
 		}
 
 		private void dataGridViewSchedule_KeyDown(object sender, KeyEventArgs e)
@@ -204,12 +207,16 @@ namespace ScheduleCurseWork
 					}
 					e.Handled = true;
 					break;
+				case Keys.Delete:
+					btnDelete_Click(null, null);
+					break;
 			}
 		}
 
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			EventList = new ScheduleManager();
+			refreshListOfEvents();
 		}
 
 		private void btnDone_KeyDown(object sender, KeyEventArgs e)
@@ -242,7 +249,7 @@ namespace ScheduleCurseWork
 
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (EventList.checkSave(EventList))
+			if (EventList.checkSave())
 			{
 				return;
 			}

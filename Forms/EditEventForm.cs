@@ -37,9 +37,10 @@ namespace ScheduleCurseWork.Forms
 
 
 			curevent = new Event();
-			textBoxTitle.Text = $"Title {eventList.AllEvents[^1].Id + 1}";
-			textBoxDescription.Text = $"Description {eventList.AllEvents[^1].Id + 1}";
-			textBoxEventLocation.Text = $"Location {eventList.AllEvents[^1].Id + 1}";
+			int nextId = eventList.AllEvents.Count>0 ? eventList.AllEvents[^1].Id + 1 : 0;
+			textBoxTitle.Text = $"Title {nextId}";
+			textBoxDescription.Text = $"Description {nextId}";
+			textBoxEventLocation.Text = $"Location {nextId}";
 			dateTimePickerDateTime.Value = DateTime.Now.AddMinutes(10);
 			dateTimePickerDuration.Text = ParseDurationToString(600);
 		}
@@ -67,7 +68,6 @@ namespace ScheduleCurseWork.Forms
 		private int ParseStringToDuration(string duration)
 		{
 			int[] values = (duration).Split(":").Select(v => string.IsNullOrEmpty(v) ? 0 : int.Parse(v)).ToArray();
-			MessageBox.Show(duration);
 			return values[0] * 3600 + values[1] * 60 + values[2];
 
 		}

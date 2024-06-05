@@ -9,7 +9,6 @@ namespace ScheduleCurseWork.Models
 		public ScheduleManager()
 		{
 			AllEvents = new List<Event>();
-			FillTessst(15);
 		}
 		[JsonInclude]
 		public List<Event> AllEvents;
@@ -36,15 +35,34 @@ namespace ScheduleCurseWork.Models
 		//
 		public void AddEvent(string title, string description, string location, DateTime starts, int duration)
 		{
+			int nextId = AllEvents.Count>0 ? AllEvents[^1].Id + 1 : 0;
 			AllEvents.Add(new Event
 			{
-				Id = AllEvents[^1].Id + 1,
+				Id = nextId,
 				Title = title,
 				Description = description,
 				Location = location,
 				DateOfStarting = starts,
 				Duration = duration,
 			});
+		}
+		private ScheduleManager MergeEventLists(ScheduleManager SM)
+		{
+			ScheduleManager mergedSM = new ScheduleManager();
+
+			foreach (var e in SM.AllEvents)
+			{
+				int nextId = mergedSM.AllEvents.Count > 0 ? mergedSM.AllEvents[^1].Id + 1 : 0;
+				e.Id = nextId;
+				mergedSM.AllEvents.Add((Event)e);
+			}
+			foreach (var e in AllEvents)
+			{
+				int nextId = mergedSM.AllEvents.Count > 0 ? mergedSM.AllEvents[^1].Id + 1 : 0;
+				e.Id = nextId;
+				mergedSM.AllEvents.Add((Event)e);
+			}
+            return mergedSM;
 		}
 		// Оновлення актуальності події
 		//
@@ -184,15 +202,23 @@ namespace ScheduleCurseWork.Models
 		// загрузка класу з файлу
 		public ScheduleManager loadData()
 		{
-			var jsonString = File.ReadAllText(".\\save.json");
+			string jsonString;
+			try
+			{
+				jsonString = File.ReadAllText(".\\save.json");
+			}catch (Exception ex) { 
+				MessageBox.Show(ex.Message); 
+				return new ScheduleManager(); 
+			}
+			
 			return JsonSerializer.Deserialize<ScheduleManager>(jsonString);
 		}
 
 		// перевірка стану збереження класу
-		public bool checkSave(ScheduleManager SM)
+		public bool checkSave()
 		{
-			if (SM == null) return false;
-			var jsonString = JsonSerializer.Serialize(SM, new JsonSerializerOptions { WriteIndented = true });
+			if (this == null) return false;
+			var jsonString = JsonSerializer.Serialize(loadData(), new JsonSerializerOptions { WriteIndented = true });
 			if (jsonString.Equals(File.ReadAllText(".\\save.json")))
 			{
 				return true;
