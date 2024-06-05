@@ -24,6 +24,7 @@ namespace ScheduleCurseWork.Forms
 			textBoxEventLocation.Text = curevent.Location;
 			dateTimePickerDateTime.Value = curevent.DateOfStarting;
 			dateTimePickerDuration.Text = ParseDurationToString(curevent.Duration);
+			panel1.Focus();
 		}
 		// Для додавання події
 		//
@@ -48,7 +49,7 @@ namespace ScheduleCurseWork.Forms
 			string location = textBoxEventLocation.Text;
 			string description = textBoxDescription.Text;
 			DateTime dateOfStarting = dateTimePickerDateTime.Value;
-			int duration = ParseStringToDuration(dateTimePickerDuration.Text);
+			int duration = ParseStringToDuration(dateTimePickerDuration_Text());
 			if (adding)
 			{
 				eventList.AddEvent(title, description, location, dateOfStarting, duration);
@@ -65,7 +66,8 @@ namespace ScheduleCurseWork.Forms
 		}
 		private int ParseStringToDuration(string duration)
 		{
-			int[] values = duration.Replace(" ", "0").Split(":").Select(v => string.IsNullOrEmpty(v) ? 0 : int.Parse(v)).ToArray();
+			int[] values = (duration).Split(":").Select(v => string.IsNullOrEmpty(v) ? 0 : int.Parse(v)).ToArray();
+			MessageBox.Show(duration);
 			return values[0] * 3600 + values[1] * 60 + values[2];
 
 		}
@@ -79,9 +81,10 @@ namespace ScheduleCurseWork.Forms
 			if (textBoxTitle.Text.Trim().Length == 0)
 			{
 				titleValid.Visible = true;
+				MessageBox.Show("Title can't be empty.");
 				e.Cancel = true;
 			}
-			else { titleValid.Visible = false; }
+			else { titleValid.Visible = false;  }
 		}
 
 		private void textBoxDescription_Validating(object sender, CancelEventArgs e)
@@ -89,19 +92,22 @@ namespace ScheduleCurseWork.Forms
 			if (textBoxDescription.Text.Trim().Length == 0)
 			{
 				descriptionValid.Visible = true;
+				MessageBox.Show("Desscription can't be empty.");
 				e.Cancel = true;
 			}
-			else { descriptionValid.Visible = false; }
+			else { descriptionValid.Visible = false;  }
 		}
 
 		private void textBoxEventLocation_Validating(object sender, CancelEventArgs e)
 		{
-			if (textBoxDescription.Text.Trim().Length == 0)
+			if (textBoxEventLocation.Text.Trim().Length == 0)
 			{
 				locationValid.Visible = true;
+				MessageBox.Show("Location can't be empty.");
 				e.Cancel = true;
+				
 			}
-			else { locationValid.Visible = false; }
+			else { locationValid.Visible = false;  }
 		}
 
 		private void dateTimePickerDateTime_Validating(object sender, CancelEventArgs e)
@@ -115,7 +121,7 @@ namespace ScheduleCurseWork.Forms
 
 		private void dateTimePickerDuration_Validating(object sender, CancelEventArgs e)
 		{
-			if (ParseStringToDuration(dateTimePickerDuration.Text) < 300)
+			if (ParseStringToDuration(dateTimePickerDuration_Text()) < 300)
 			{
 				MessageBox.Show("Duration musn't be less than 5 minutes.");
 				e.Cancel = true;
@@ -124,23 +130,36 @@ namespace ScheduleCurseWork.Forms
 
 		private void dateTimePickerDuration_TextChanged(object sender, EventArgs e)
 		{
-
 			var text = dateTimePickerDuration.Text.Replace(":", "").PadRight(6, '0');
 
 			if (!int.TryParse(text, out int timeInput))
 			{
 				return;
 			}
-
-			int hours = Math.Min(timeInput / 10000, 23);
+			int hours = Math.Min(timeInput / 10000, 24);
 			int minutes = Math.Min((timeInput / 100) % 100, 59);
 			int seconds = Math.Min(timeInput % 100, 59);
+			
 
 			dateTimePickerDuration.TextChanged -= dateTimePickerDuration_TextChanged;
-			dateTimePickerDuration.Text = $"{hours:00}:{minutes:00}:{seconds:00}"; ;
+			dateTimePickerDuration.Text = $"{hours:00}:{minutes:00}:{seconds:00}";
 			dateTimePickerDuration.SelectionStart = dateTimePickerDuration.Text.Length;
 			dateTimePickerDuration.TextChanged += dateTimePickerDuration_TextChanged;
 		}
+		private string dateTimePickerDuration_Text()
+		{
+			var text = dateTimePickerDuration.Text.Replace(":", "").PadRight(6, '0').Replace(" ", "0");
+
+			if (!int.TryParse(text, out int timeInput))
+			{
+				return "00:00:00";
+			}
+			int hours = Math.Min(timeInput / 10000, 99);
+			int minutes = Math.Min((timeInput / 100) % 100, 59);
+			int seconds = Math.Min(timeInput % 100, 59);
+			return $"{hours:00}:{minutes:00}:{seconds:00}";
+		}
+
 		private string ParseDurationToString(int duration)
 		{
 			int hours = Math.Min(duration / 3600, 99);
@@ -152,5 +171,20 @@ namespace ScheduleCurseWork.Forms
 			return $"{hours:00}:{minutes:00}:{seconds:00}";
 		}
 
+		private void textBoxTitle_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				panel1.Focus();
+			}
+		}
+
+		private void panel1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				Close();
+			}
+		}
 	}
 }

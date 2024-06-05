@@ -38,8 +38,8 @@
 			durationDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			DateOfStarting = new DataGridViewTextBoxColumn();
 			descriptionDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			isMissedDataGridViewCheckBoxColumn = new DataGridViewCheckBoxColumn();
 			isDoneDataGridViewCheckBoxColumn = new DataGridViewCheckBoxColumn();
+			isMissedDataGridViewCheckBoxColumn = new DataGridViewCheckBoxColumn();
 			eventBindingSource = new BindingSource(components);
 			ControlPanel = new Panel();
 			btnAdd = new Button();
@@ -47,7 +47,9 @@
 			btnDone = new Button();
 			btnDelete = new Button();
 			btnEdit = new Button();
+			label4 = new Label();
 			label3 = new Label();
+			checkBoxOverlappingEvents = new CheckBox();
 			label1 = new Label();
 			checkboxShowAllEvents = new CheckBox();
 			checkBoxFilter = new CheckBox();
@@ -65,8 +67,6 @@
 			toolStripSeparator1 = new ToolStripSeparator();
 			toolStripSeparator2 = new ToolStripSeparator();
 			exitToolStripMenuItem = new ToolStripMenuItem();
-			toolsToolStripMenuItem = new ToolStripMenuItem();
-			optionsToolStripMenuItem = new ToolStripMenuItem();
 			helpToolStripMenuItem = new ToolStripMenuItem();
 			toolStripSeparator5 = new ToolStripSeparator();
 			aboutToolStripMenuItem = new ToolStripMenuItem();
@@ -112,8 +112,9 @@
 			dataGridViewSchedule.BorderStyle = BorderStyle.None;
 			dataGridViewSchedule.CellBorderStyle = DataGridViewCellBorderStyle.SingleVertical;
 			dataGridViewSchedule.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+			dataGridViewSchedule.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			dataGridViewSchedule.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			dataGridViewSchedule.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, dataGridViewTextBoxColumn1, locationDataGridViewTextBoxColumn, durationDataGridViewTextBoxColumn, DateOfStarting, descriptionDataGridViewTextBoxColumn, isMissedDataGridViewCheckBoxColumn, isDoneDataGridViewCheckBoxColumn });
+			dataGridViewSchedule.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, dataGridViewTextBoxColumn1, locationDataGridViewTextBoxColumn, durationDataGridViewTextBoxColumn, DateOfStarting, descriptionDataGridViewTextBoxColumn, isDoneDataGridViewCheckBoxColumn, isMissedDataGridViewCheckBoxColumn });
 			dataGridViewSchedule.DataSource = eventBindingSource;
 			dataGridViewSchedule.Dock = DockStyle.Top;
 			dataGridViewSchedule.GridColor = SystemColors.Desktop;
@@ -130,9 +131,12 @@
 			dataGridViewSchedule.RowTemplate.Height = 48;
 			dataGridViewSchedule.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dataGridViewSchedule.Size = new Size(1832, 551);
+			dataGridViewSchedule.StandardTab = true;
 			dataGridViewSchedule.TabIndex = 0;
+			dataGridViewSchedule.VirtualMode = true;
 			dataGridViewSchedule.CellContentDoubleClick += dataGridViewSchedule_CellContentDoubleClick;
 			dataGridViewSchedule.CellFormatting += dataGridViewSchedule_CellFormatting;
+			dataGridViewSchedule.KeyDown += dataGridViewSchedule_KeyDown;
 			// 
 			// idDataGridViewTextBoxColumn
 			// 
@@ -142,7 +146,7 @@
 			idDataGridViewTextBoxColumn.MinimumWidth = 8;
 			idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
 			idDataGridViewTextBoxColumn.ReadOnly = true;
-			idDataGridViewTextBoxColumn.Width = 60;
+			idDataGridViewTextBoxColumn.Width = 82;
 			// 
 			// dataGridViewTextBoxColumn1
 			// 
@@ -152,7 +156,7 @@
 			dataGridViewTextBoxColumn1.MinimumWidth = 8;
 			dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
 			dataGridViewTextBoxColumn1.ReadOnly = true;
-			dataGridViewTextBoxColumn1.Width = 80;
+			dataGridViewTextBoxColumn1.Width = 121;
 			// 
 			// locationDataGridViewTextBoxColumn
 			// 
@@ -162,7 +166,7 @@
 			locationDataGridViewTextBoxColumn.MinimumWidth = 8;
 			locationDataGridViewTextBoxColumn.Name = "locationDataGridViewTextBoxColumn";
 			locationDataGridViewTextBoxColumn.ReadOnly = true;
-			locationDataGridViewTextBoxColumn.Width = 114;
+			locationDataGridViewTextBoxColumn.Width = 189;
 			// 
 			// durationDataGridViewTextBoxColumn
 			// 
@@ -172,7 +176,7 @@
 			durationDataGridViewTextBoxColumn.MinimumWidth = 8;
 			durationDataGridViewTextBoxColumn.Name = "durationDataGridViewTextBoxColumn";
 			durationDataGridViewTextBoxColumn.ReadOnly = true;
-			durationDataGridViewTextBoxColumn.Width = 114;
+			durationDataGridViewTextBoxColumn.Width = 189;
 			// 
 			// DateOfStarting
 			// 
@@ -182,7 +186,7 @@
 			DateOfStarting.MinimumWidth = 8;
 			DateOfStarting.Name = "DateOfStarting";
 			DateOfStarting.ReadOnly = true;
-			DateOfStarting.Width = 165;
+			DateOfStarting.Width = 291;
 			// 
 			// descriptionDataGridViewTextBoxColumn
 			// 
@@ -193,16 +197,6 @@
 			descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
 			descriptionDataGridViewTextBoxColumn.ReadOnly = true;
 			// 
-			// isMissedDataGridViewCheckBoxColumn
-			// 
-			isMissedDataGridViewCheckBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-			isMissedDataGridViewCheckBoxColumn.DataPropertyName = "IsMissed";
-			isMissedDataGridViewCheckBoxColumn.HeaderText = "IsMissed";
-			isMissedDataGridViewCheckBoxColumn.MinimumWidth = 8;
-			isMissedDataGridViewCheckBoxColumn.Name = "isMissedDataGridViewCheckBoxColumn";
-			isMissedDataGridViewCheckBoxColumn.ReadOnly = true;
-			isMissedDataGridViewCheckBoxColumn.Width = 86;
-			// 
 			// isDoneDataGridViewCheckBoxColumn
 			// 
 			isDoneDataGridViewCheckBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
@@ -211,7 +205,17 @@
 			isDoneDataGridViewCheckBoxColumn.MinimumWidth = 8;
 			isDoneDataGridViewCheckBoxColumn.Name = "isDoneDataGridViewCheckBoxColumn";
 			isDoneDataGridViewCheckBoxColumn.ReadOnly = true;
-			isDoneDataGridViewCheckBoxColumn.Width = 72;
+			isDoneDataGridViewCheckBoxColumn.Width = 136;
+			// 
+			// isMissedDataGridViewCheckBoxColumn
+			// 
+			isMissedDataGridViewCheckBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			isMissedDataGridViewCheckBoxColumn.DataPropertyName = "IsMissed";
+			isMissedDataGridViewCheckBoxColumn.HeaderText = "IsMissed";
+			isMissedDataGridViewCheckBoxColumn.MinimumWidth = 8;
+			isMissedDataGridViewCheckBoxColumn.Name = "isMissedDataGridViewCheckBoxColumn";
+			isMissedDataGridViewCheckBoxColumn.ReadOnly = true;
+			isMissedDataGridViewCheckBoxColumn.Width = 164;
 			// 
 			// eventBindingSource
 			// 
@@ -225,7 +229,9 @@
 			ControlPanel.Controls.Add(btnDone);
 			ControlPanel.Controls.Add(btnDelete);
 			ControlPanel.Controls.Add(btnEdit);
+			ControlPanel.Controls.Add(label4);
 			ControlPanel.Controls.Add(label3);
+			ControlPanel.Controls.Add(checkBoxOverlappingEvents);
 			ControlPanel.Controls.Add(label1);
 			ControlPanel.Controls.Add(checkboxShowAllEvents);
 			ControlPanel.Controls.Add(checkBoxFilter);
@@ -244,10 +250,11 @@
 			btnAdd.Margin = new Padding(0);
 			btnAdd.Name = "btnAdd";
 			btnAdd.Size = new Size(150, 150);
-			btnAdd.TabIndex = 1;
+			btnAdd.TabIndex = 8;
 			btnAdd.Text = "+";
 			btnAdd.UseVisualStyleBackColor = true;
 			btnAdd.Click += btnAdd_Click;
+			btnAdd.KeyDown += btnDone_KeyDown;
 			// 
 			// dateTimePickerFilter
 			// 
@@ -270,6 +277,7 @@
 			dateTimePickerFilter.TabIndex = 5;
 			dateTimePickerFilter.ValueChanged += TotalUpdatingEventsHandler;
 			dateTimePickerFilter.Enter += TotalUpdatingEventsHandler;
+			dateTimePickerFilter.KeyDown += btnDone_KeyDown;
 			// 
 			// btnDone
 			// 
@@ -280,10 +288,11 @@
 			btnDone.Margin = new Padding(30, 0, 0, 30);
 			btnDone.Name = "btnDone";
 			btnDone.Size = new Size(264, 75);
-			btnDone.TabIndex = 3;
+			btnDone.TabIndex = 1;
 			btnDone.Text = "Done";
 			btnDone.UseVisualStyleBackColor = true;
 			btnDone.Click += btnDone_Click;
+			btnDone.KeyDown += btnDone_KeyDown;
 			// 
 			// btnDelete
 			// 
@@ -294,10 +303,11 @@
 			btnDelete.Margin = new Padding(30, 0, 0, 30);
 			btnDelete.Name = "btnDelete";
 			btnDelete.Size = new Size(264, 75);
-			btnDelete.TabIndex = 3;
+			btnDelete.TabIndex = 2;
 			btnDelete.Text = "Delete";
 			btnDelete.UseVisualStyleBackColor = true;
 			btnDelete.Click += btnDelete_Click;
+			btnDelete.KeyDown += btnDone_KeyDown;
 			// 
 			// btnEdit
 			// 
@@ -308,10 +318,24 @@
 			btnEdit.Margin = new Padding(30, 0, 0, 30);
 			btnEdit.Name = "btnEdit";
 			btnEdit.Size = new Size(264, 75);
-			btnEdit.TabIndex = 2;
+			btnEdit.TabIndex = 3;
 			btnEdit.Text = "Edit";
 			btnEdit.UseVisualStyleBackColor = true;
 			btnEdit.Click += btnEdit_Click;
+			btnEdit.KeyDown += btnDone_KeyDown;
+			// 
+			// label4
+			// 
+			label4.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			label4.BackColor = Color.Transparent;
+			label4.Font = new Font("Segoe UI", 18F);
+			label4.ForeColor = Color.Lime;
+			label4.Location = new Point(377, 211);
+			label4.Name = "label4";
+			label4.Size = new Size(339, 75);
+			label4.TabIndex = 7;
+			label4.Text = "Show overlappings";
+			label4.TextAlign = ContentAlignment.MiddleCenter;
 			// 
 			// label3
 			// 
@@ -325,6 +349,26 @@
 			label3.TabIndex = 7;
 			label3.Text = "Show all";
 			label3.TextAlign = ContentAlignment.MiddleCenter;
+			// 
+			// checkBoxOverlappingEvents
+			// 
+			checkBoxOverlappingEvents.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			checkBoxOverlappingEvents.AutoSize = true;
+			checkBoxOverlappingEvents.BackColor = Color.Transparent;
+			checkBoxOverlappingEvents.Cursor = Cursors.Hand;
+			checkBoxOverlappingEvents.Font = new Font("Segoe UI Semilight", 18F);
+			checkBoxOverlappingEvents.ForeColor = Color.Lime;
+			checkBoxOverlappingEvents.Location = new Point(719, 237);
+			checkBoxOverlappingEvents.Margin = new Padding(0);
+			checkBoxOverlappingEvents.Name = "checkBoxOverlappingEvents";
+			checkBoxOverlappingEvents.RightToLeft = RightToLeft.No;
+			checkBoxOverlappingEvents.Size = new Size(22, 21);
+			checkBoxOverlappingEvents.TabIndex = 7;
+			checkBoxOverlappingEvents.TextAlign = ContentAlignment.MiddleCenter;
+			checkBoxOverlappingEvents.UseVisualStyleBackColor = false;
+			checkBoxOverlappingEvents.CheckedChanged += TotalUpdatingEventsHandler;
+			checkBoxOverlappingEvents.CheckStateChanged += TotalUpdatingEventsHandler;
+			checkBoxOverlappingEvents.KeyDown += checkboxEscape_KeyDown;
 			// 
 			// label1
 			// 
@@ -343,38 +387,42 @@
 			// checkboxShowAllEvents
 			// 
 			checkboxShowAllEvents.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			checkboxShowAllEvents.AutoSize = true;
 			checkboxShowAllEvents.BackColor = Color.Transparent;
 			checkboxShowAllEvents.Cursor = Cursors.Hand;
 			checkboxShowAllEvents.Font = new Font("Segoe UI Semilight", 18F);
 			checkboxShowAllEvents.ForeColor = Color.Lime;
-			checkboxShowAllEvents.Location = new Point(272, 210);
+			checkboxShowAllEvents.Location = new Point(272, 237);
 			checkboxShowAllEvents.Margin = new Padding(0);
 			checkboxShowAllEvents.Name = "checkboxShowAllEvents";
 			checkboxShowAllEvents.RightToLeft = RightToLeft.No;
-			checkboxShowAllEvents.Size = new Size(75, 75);
+			checkboxShowAllEvents.Size = new Size(22, 21);
 			checkboxShowAllEvents.TabIndex = 6;
 			checkboxShowAllEvents.TextAlign = ContentAlignment.MiddleCenter;
 			checkboxShowAllEvents.UseVisualStyleBackColor = false;
 			checkboxShowAllEvents.CheckedChanged += TotalUpdatingEventsHandler;
 			checkboxShowAllEvents.CheckStateChanged += TotalUpdatingEventsHandler;
+			checkboxShowAllEvents.KeyDown += checkboxEscape_KeyDown;
 			// 
 			// checkBoxFilter
 			// 
 			checkBoxFilter.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			checkBoxFilter.AutoSize = true;
 			checkBoxFilter.BackColor = Color.Transparent;
 			checkBoxFilter.Cursor = Cursors.Hand;
 			checkBoxFilter.Font = new Font("Segoe UI Semilight", 18F);
 			checkBoxFilter.ForeColor = Color.Lime;
-			checkBoxFilter.Location = new Point(272, 105);
+			checkBoxFilter.Location = new Point(272, 131);
 			checkBoxFilter.Margin = new Padding(0, 0, 0, 30);
 			checkBoxFilter.Name = "checkBoxFilter";
 			checkBoxFilter.RightToLeft = RightToLeft.No;
-			checkBoxFilter.Size = new Size(75, 75);
-			checkBoxFilter.TabIndex = 6;
+			checkBoxFilter.Size = new Size(22, 21);
+			checkBoxFilter.TabIndex = 4;
 			checkBoxFilter.TextAlign = ContentAlignment.MiddleCenter;
 			checkBoxFilter.UseVisualStyleBackColor = false;
 			checkBoxFilter.CheckedChanged += TotalUpdatingEventsHandler;
 			checkBoxFilter.CheckStateChanged += TotalUpdatingEventsHandler;
+			checkBoxFilter.KeyDown += checkboxEscape_KeyDown;
 			// 
 			// InfoPanel
 			// 
@@ -418,11 +466,12 @@
 			// 
 			// menuStrip1
 			// 
+			menuStrip1.Font = new Font("Segoe UI", 14F);
 			menuStrip1.ImageScalingSize = new Size(24, 24);
-			menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
+			menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, helpToolStripMenuItem });
 			menuStrip1.Location = new Point(0, 0);
 			menuStrip1.Name = "menuStrip1";
-			menuStrip1.Size = new Size(1892, 29);
+			menuStrip1.Size = new Size(1892, 40);
 			menuStrip1.TabIndex = 0;
 			menuStrip1.Text = "menuStrip1";
 			// 
@@ -430,7 +479,7 @@
 			// 
 			fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, toolStripSeparator2, exitToolStripMenuItem });
 			fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			fileToolStripMenuItem.Size = new Size(55, 25);
+			fileToolStripMenuItem.Size = new Size(74, 36);
 			fileToolStripMenuItem.Text = "&File";
 			// 
 			// newToolStripMenuItem
@@ -439,8 +488,9 @@
 			newToolStripMenuItem.ImageTransparentColor = Color.Magenta;
 			newToolStripMenuItem.Name = "newToolStripMenuItem";
 			newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-			newToolStripMenuItem.Size = new Size(217, 34);
+			newToolStripMenuItem.Size = new Size(282, 40);
 			newToolStripMenuItem.Text = "&New";
+			newToolStripMenuItem.Click += newToolStripMenuItem_Click;
 			// 
 			// openToolStripMenuItem
 			// 
@@ -448,13 +498,14 @@
 			openToolStripMenuItem.ImageTransparentColor = Color.Magenta;
 			openToolStripMenuItem.Name = "openToolStripMenuItem";
 			openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-			openToolStripMenuItem.Size = new Size(217, 34);
+			openToolStripMenuItem.Size = new Size(282, 40);
 			openToolStripMenuItem.Text = "&Open";
+			openToolStripMenuItem.Click += openToolStripMenuItem_Click;
 			// 
 			// toolStripSeparator
 			// 
 			toolStripSeparator.Name = "toolStripSeparator";
-			toolStripSeparator.Size = new Size(214, 6);
+			toolStripSeparator.Size = new Size(279, 6);
 			// 
 			// saveToolStripMenuItem
 			// 
@@ -462,61 +513,50 @@
 			saveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
 			saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-			saveToolStripMenuItem.Size = new Size(217, 34);
+			saveToolStripMenuItem.Size = new Size(282, 40);
 			saveToolStripMenuItem.Text = "&Save";
+			saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
 			// 
 			// saveAsToolStripMenuItem
 			// 
 			saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			saveAsToolStripMenuItem.Size = new Size(217, 34);
+			saveAsToolStripMenuItem.Size = new Size(282, 40);
 			saveAsToolStripMenuItem.Text = "Save &As";
 			// 
 			// toolStripSeparator1
 			// 
 			toolStripSeparator1.Name = "toolStripSeparator1";
-			toolStripSeparator1.Size = new Size(214, 6);
+			toolStripSeparator1.Size = new Size(279, 6);
 			// 
 			// toolStripSeparator2
 			// 
 			toolStripSeparator2.Name = "toolStripSeparator2";
-			toolStripSeparator2.Size = new Size(214, 6);
+			toolStripSeparator2.Size = new Size(279, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			exitToolStripMenuItem.Size = new Size(217, 34);
+			exitToolStripMenuItem.Size = new Size(282, 40);
 			exitToolStripMenuItem.Text = "E&xit";
-			// 
-			// toolsToolStripMenuItem
-			// 
-			toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { optionsToolStripMenuItem });
-			toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-			toolsToolStripMenuItem.Size = new Size(69, 25);
-			toolsToolStripMenuItem.Text = "&Tools";
-			// 
-			// optionsToolStripMenuItem
-			// 
-			optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			optionsToolStripMenuItem.Size = new Size(172, 34);
-			optionsToolStripMenuItem.Text = "&Options";
 			// 
 			// helpToolStripMenuItem
 			// 
 			helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripSeparator5, aboutToolStripMenuItem });
 			helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			helpToolStripMenuItem.Size = new Size(63, 25);
+			helpToolStripMenuItem.Size = new Size(87, 36);
 			helpToolStripMenuItem.Text = "&Help";
 			// 
 			// toolStripSeparator5
 			// 
 			toolStripSeparator5.Name = "toolStripSeparator5";
-			toolStripSeparator5.Size = new Size(168, 6);
+			toolStripSeparator5.Size = new Size(213, 6);
 			// 
 			// aboutToolStripMenuItem
 			// 
 			aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			aboutToolStripMenuItem.Size = new Size(171, 34);
+			aboutToolStripMenuItem.Size = new Size(216, 40);
 			aboutToolStripMenuItem.Text = "&About...";
+			aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
 			// 
 			// timer1
 			// 
@@ -535,10 +575,12 @@
 			Name = "MainForm";
 			StartPosition = FormStartPosition.CenterScreen;
 			Text = "Schedule";
+			FormClosing += MainForm_FormClosing;
 			BackgroundPanel.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)dataGridViewSchedule).EndInit();
 			((System.ComponentModel.ISupportInitialize)eventBindingSource).EndInit();
 			ControlPanel.ResumeLayout(false);
+			ControlPanel.PerformLayout();
 			InfoPanel.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)scheduleManagerBindingSource).EndInit();
 			menuStrip1.ResumeLayout(false);
@@ -560,8 +602,6 @@
 		private ToolStripSeparator toolStripSeparator1;
 		private ToolStripSeparator toolStripSeparator2;
 		private ToolStripMenuItem exitToolStripMenuItem;
-		private ToolStripMenuItem toolsToolStripMenuItem;
-		private ToolStripMenuItem optionsToolStripMenuItem;
 		private ToolStripMenuItem helpToolStripMenuItem;
 		private ToolStripSeparator toolStripSeparator5;
 		private ToolStripMenuItem aboutToolStripMenuItem;
@@ -582,16 +622,18 @@
 		private System.Windows.Forms.Timer timer1;
 		private DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+		private Label label3;
+		private CheckBox checkboxShowAllEvents;
+		private BindingSource scheduleManagerBindingSource;
 		private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
 		private DataGridViewTextBoxColumn locationDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn durationDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn DateOfStarting;
 		private DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
-		private DataGridViewCheckBoxColumn isMissedDataGridViewCheckBoxColumn;
 		private DataGridViewCheckBoxColumn isDoneDataGridViewCheckBoxColumn;
-		private Label label3;
-		private CheckBox checkboxShowAllEvents;
-		private BindingSource scheduleManagerBindingSource;
+		private DataGridViewCheckBoxColumn isMissedDataGridViewCheckBoxColumn;
+		private Label label4;
+		private CheckBox checkBoxOverlappingEvents;
 	}
 }

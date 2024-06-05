@@ -74,6 +74,7 @@
 			panel1.Padding = new Padding(30);
 			panel1.Size = new Size(950, 1192);
 			panel1.TabIndex = 0;
+			panel1.PreviewKeyDown += panel1_PreviewKeyDown;
 			// 
 			// dateTimePickerDuration
 			// 
@@ -83,9 +84,10 @@
 			dateTimePickerDuration.Name = "dateTimePickerDuration";
 			dateTimePickerDuration.PromptChar = '0';
 			dateTimePickerDuration.Size = new Size(844, 55);
-			dateTimePickerDuration.TabIndex = 8;
+			dateTimePickerDuration.TabIndex = 4;
 			dateTimePickerDuration.TextAlign = HorizontalAlignment.Center;
 			dateTimePickerDuration.TextChanged += dateTimePickerDuration_TextChanged;
+			dateTimePickerDuration.KeyDown += textBoxTitle_KeyDown;
 			dateTimePickerDuration.Validating += dateTimePickerDuration_Validating;
 			// 
 			// locationValid
@@ -155,7 +157,8 @@
 			dateTimePickerDateTime.Margin = new Padding(0, 0, 0, 30);
 			dateTimePickerDateTime.Name = "dateTimePickerDateTime";
 			dateTimePickerDateTime.Size = new Size(844, 55);
-			dateTimePickerDateTime.TabIndex = 4;
+			dateTimePickerDateTime.TabIndex = 3;
+			dateTimePickerDateTime.KeyDown += textBoxTitle_KeyDown;
 			dateTimePickerDateTime.Validating += dateTimePickerDateTime_Validating;
 			// 
 			// textBoxEventLocation
@@ -168,7 +171,8 @@
 			textBoxEventLocation.Margin = new Padding(100, 0, 100, 30);
 			textBoxEventLocation.Name = "textBoxEventLocation";
 			textBoxEventLocation.Size = new Size(644, 55);
-			textBoxEventLocation.TabIndex = 3;
+			textBoxEventLocation.TabIndex = 2;
+			textBoxEventLocation.KeyDown += textBoxTitle_KeyDown;
 			textBoxEventLocation.Validating += textBoxEventLocation_Validating;
 			// 
 			// textBoxDescription
@@ -181,7 +185,8 @@
 			textBoxDescription.Margin = new Padding(100, 0, 100, 30);
 			textBoxDescription.Name = "textBoxDescription";
 			textBoxDescription.Size = new Size(644, 55);
-			textBoxDescription.TabIndex = 3;
+			textBoxDescription.TabIndex = 1;
+			textBoxDescription.KeyDown += textBoxTitle_KeyDown;
 			textBoxDescription.Validating += textBoxDescription_Validating;
 			// 
 			// label5
@@ -236,7 +241,8 @@
 			textBoxTitle.Margin = new Padding(100, 0, 100, 30);
 			textBoxTitle.Name = "textBoxTitle";
 			textBoxTitle.Size = new Size(644, 55);
-			textBoxTitle.TabIndex = 3;
+			textBoxTitle.TabIndex = 0;
+			textBoxTitle.KeyDown += textBoxTitle_KeyDown;
 			textBoxTitle.Validating += textBoxTitle_Validating;
 			// 
 			// label2
@@ -276,7 +282,7 @@
 			button2.Margin = new Padding(0, 0, 30, 0);
 			button2.Name = "button2";
 			button2.Size = new Size(146, 51);
-			button2.TabIndex = 0;
+			button2.TabIndex = 5;
 			button2.Text = "Cancel";
 			button2.UseVisualStyleBackColor = true;
 			button2.Click += button2_Click;
@@ -290,7 +296,7 @@
 			button1.Margin = new Padding(0);
 			button1.Name = "button1";
 			button1.Size = new Size(146, 51);
-			button1.TabIndex = 0;
+			button1.TabIndex = 6;
 			button1.Text = "OK";
 			button1.UseVisualStyleBackColor = true;
 			button1.Click += button1_Click;
@@ -299,6 +305,7 @@
 			// 
 			AutoScaleDimensions = new SizeF(10F, 21F);
 			AutoScaleMode = AutoScaleMode.Font;
+			CausesValidation = false;
 			ClientSize = new Size(950, 1192);
 			Controls.Add(panel1);
 			Name = "EditEventForm";
