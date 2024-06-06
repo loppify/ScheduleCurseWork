@@ -29,6 +29,9 @@
 		{
 			components = new System.ComponentModel.Container();
 			DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+			DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+			DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+			DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			BackgroundPanel = new Panel();
 			dataGridViewSchedule = new DataGridView();
@@ -108,6 +111,7 @@
 			dataGridViewSchedule.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
 			dataGridViewSchedule.AutoGenerateColumns = false;
 			dataGridViewSchedule.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+			dataGridViewSchedule.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
 			dataGridViewSchedule.BackgroundColor = SystemColors.Desktop;
 			dataGridViewSchedule.BorderStyle = BorderStyle.None;
 			dataGridViewSchedule.CellBorderStyle = DataGridViewCellBorderStyle.SingleVertical;
@@ -128,7 +132,10 @@
 			dataGridViewSchedule.RowHeadersVisible = false;
 			dataGridViewSchedule.RowHeadersWidth = 62;
 			dataGridViewSchedule.RowsDefaultCellStyle = dataGridViewCellStyle1;
-			dataGridViewSchedule.RowTemplate.Height = 48;
+			dataGridViewSchedule.RowTemplate.DividerHeight = 1;
+			dataGridViewSchedule.RowTemplate.Height = 60;
+			dataGridViewSchedule.RowTemplate.ReadOnly = true;
+			dataGridViewSchedule.RowTemplate.Resizable = DataGridViewTriState.True;
 			dataGridViewSchedule.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dataGridViewSchedule.Size = new Size(1832, 551);
 			dataGridViewSchedule.StandardTab = true;
@@ -140,10 +147,10 @@
 			// 
 			// idDataGridViewTextBoxColumn
 			// 
-			idDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			idDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
 			idDataGridViewTextBoxColumn.DataPropertyName = "Id";
 			idDataGridViewTextBoxColumn.HeaderText = "Id";
-			idDataGridViewTextBoxColumn.MinimumWidth = 8;
+			idDataGridViewTextBoxColumn.MinimumWidth = 2;
 			idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
 			idDataGridViewTextBoxColumn.ReadOnly = true;
 			idDataGridViewTextBoxColumn.Width = 82;
@@ -162,6 +169,8 @@
 			// 
 			locationDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 			locationDataGridViewTextBoxColumn.DataPropertyName = "Location";
+			dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+			locationDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
 			locationDataGridViewTextBoxColumn.HeaderText = "Location";
 			locationDataGridViewTextBoxColumn.MinimumWidth = 8;
 			locationDataGridViewTextBoxColumn.Name = "locationDataGridViewTextBoxColumn";
@@ -180,18 +189,22 @@
 			// 
 			// DateOfStarting
 			// 
-			DateOfStarting.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			DateOfStarting.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
 			DateOfStarting.DataPropertyName = "DateOfStarting";
-			DateOfStarting.HeaderText = "DateOfStarting";
+			dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+			DateOfStarting.DefaultCellStyle = dataGridViewCellStyle3;
+			DateOfStarting.HeaderText = "Date of starting";
 			DateOfStarting.MinimumWidth = 8;
 			DateOfStarting.Name = "DateOfStarting";
 			DateOfStarting.ReadOnly = true;
-			DateOfStarting.Width = 291;
+			DateOfStarting.Width = 297;
 			// 
 			// descriptionDataGridViewTextBoxColumn
 			// 
 			descriptionDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 			descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
+			dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+			descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
 			descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
 			descriptionDataGridViewTextBoxColumn.MinimumWidth = 8;
 			descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
@@ -199,23 +212,23 @@
 			// 
 			// isDoneDataGridViewCheckBoxColumn
 			// 
-			isDoneDataGridViewCheckBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			isDoneDataGridViewCheckBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
 			isDoneDataGridViewCheckBoxColumn.DataPropertyName = "IsDone";
-			isDoneDataGridViewCheckBoxColumn.HeaderText = "IsDone";
+			isDoneDataGridViewCheckBoxColumn.HeaderText = "Done";
 			isDoneDataGridViewCheckBoxColumn.MinimumWidth = 8;
 			isDoneDataGridViewCheckBoxColumn.Name = "isDoneDataGridViewCheckBoxColumn";
 			isDoneDataGridViewCheckBoxColumn.ReadOnly = true;
-			isDoneDataGridViewCheckBoxColumn.Width = 136;
+			isDoneDataGridViewCheckBoxColumn.Width = 150;
 			// 
 			// isMissedDataGridViewCheckBoxColumn
 			// 
-			isMissedDataGridViewCheckBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			isMissedDataGridViewCheckBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
 			isMissedDataGridViewCheckBoxColumn.DataPropertyName = "IsMissed";
-			isMissedDataGridViewCheckBoxColumn.HeaderText = "IsMissed";
+			isMissedDataGridViewCheckBoxColumn.HeaderText = "Missed";
 			isMissedDataGridViewCheckBoxColumn.MinimumWidth = 8;
 			isMissedDataGridViewCheckBoxColumn.Name = "isMissedDataGridViewCheckBoxColumn";
 			isMissedDataGridViewCheckBoxColumn.ReadOnly = true;
-			isMissedDataGridViewCheckBoxColumn.Width = 164;
+			isMissedDataGridViewCheckBoxColumn.Width = 150;
 			// 
 			// eventBindingSource
 			// 
@@ -235,6 +248,7 @@
 			ControlPanel.Controls.Add(label1);
 			ControlPanel.Controls.Add(checkboxShowAllEvents);
 			ControlPanel.Controls.Add(checkBoxFilter);
+			ControlPanel.Font = new Font("Ink Free", 17.9999981F);
 			ControlPanel.Location = new Point(927, 641);
 			ControlPanel.Margin = new Padding(30, 30, 0, 0);
 			ControlPanel.Name = "ControlPanel";
@@ -408,15 +422,16 @@
 			// 
 			checkBoxFilter.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 			checkBoxFilter.AutoSize = true;
-			checkBoxFilter.BackColor = Color.Transparent;
+			checkBoxFilter.BackColor = Color.Silver;
 			checkBoxFilter.Cursor = Cursors.Hand;
 			checkBoxFilter.Font = new Font("Segoe UI Semilight", 18F);
 			checkBoxFilter.ForeColor = Color.Lime;
-			checkBoxFilter.Location = new Point(272, 131);
+			checkBoxFilter.Image = Properties.Resources.Unchecked;
+			checkBoxFilter.Location = new Point(272, 117);
 			checkBoxFilter.Margin = new Padding(0, 0, 0, 30);
 			checkBoxFilter.Name = "checkBoxFilter";
 			checkBoxFilter.RightToLeft = RightToLeft.No;
-			checkBoxFilter.Size = new Size(22, 21);
+			checkBoxFilter.Size = new Size(70, 48);
 			checkBoxFilter.TabIndex = 4;
 			checkBoxFilter.TextAlign = ContentAlignment.MiddleCenter;
 			checkBoxFilter.UseVisualStyleBackColor = false;
@@ -429,6 +444,7 @@
 			InfoPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			InfoPanel.Controls.Add(labelInfoNearestImage);
 			InfoPanel.Controls.Add(label2);
+			InfoPanel.Font = new Font("Ink Free", 17.9999981F);
 			InfoPanel.Location = new Point(30, 641);
 			InfoPanel.Margin = new Padding(0);
 			InfoPanel.Name = "InfoPanel";
@@ -625,6 +641,8 @@
 		private Label label3;
 		private CheckBox checkboxShowAllEvents;
 		private BindingSource scheduleManagerBindingSource;
+		private Label label4;
+		private CheckBox checkBoxOverlappingEvents;
 		private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
 		private DataGridViewTextBoxColumn locationDataGridViewTextBoxColumn;
@@ -633,7 +651,5 @@
 		private DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
 		private DataGridViewCheckBoxColumn isDoneDataGridViewCheckBoxColumn;
 		private DataGridViewCheckBoxColumn isMissedDataGridViewCheckBoxColumn;
-		private Label label4;
-		private CheckBox checkBoxOverlappingEvents;
 	}
 }

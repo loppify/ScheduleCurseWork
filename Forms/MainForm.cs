@@ -5,67 +5,73 @@ namespace ScheduleCurseWork
 {
 	public partial class MainForm : Form
 	{
+		Font defaultFont = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 204);
+
 		private static string cloumnIdName = "idDataGridViewTextBoxColumn";
 		static string dateTimeFormat = "ddddMMMM d yyyy";
-		ScheduleManager EventList = new ScheduleManager().loadData();
+		ScheduleManager eventList = new ScheduleManager().loadData();
 		DateTime dtfilter = DateTime.MinValue;
+
+		public Font DefaultFont1 { get => defaultFont; set => defaultFont = value; }
+		public static string CloumnIdName { get => cloumnIdName; set => cloumnIdName = value; }
+		public static string DateTimeFormat { get => dateTimeFormat; set => dateTimeFormat = value; }
+		public ScheduleManager EventList1 { get => eventList; set => eventList = value; }
+		public DateTime Dtfilter { get => dtfilter; set => dtfilter = value; }
+
 		public MainForm()
 		{
 			InitializeComponent();
-			
+			ChangeFont(Controls, DefaultFont1);
 
-			dateTimePickerFilter.CustomFormat = dateTimeFormat;
+			dateTimePickerFilter.CustomFormat = DateTimeFormat;
 			dateTimePickerFilter.MinDate = DateTime.Now.Date;
-			
+
 			refreshListOfEvents();
-			
+
+
 		}
 
-		private void btnAdd_Click(object sender, EventArgs e)
-		{
-			openEditEvent();
-		}
+		private void btnAdd_Click(object sender, EventArgs e) => openEditEvent();
 
 		private void refreshListOfEvents()
 		{
-
 			if (checkBoxFilter.Checked)
 			{
-				dtfilter = dateTimePickerFilter.Value;
+				Dtfilter = dateTimePickerFilter.Value;
 			}
 			else
 			{
-				dtfilter = DateTime.MinValue;
+				Dtfilter = DateTime.MinValue;
 			}
-			List<Event> searchedbydate = EventList.SearchByDate(dtfilter, checkboxShowAllEvents.Checked, checkBoxOverlappingEvents.Checked);
+			List<Event> searchedbydate = EventList1.EventFilter(Dtfilter, checkboxShowAllEvents.Checked, checkBoxOverlappingEvents.Checked);
 			eventBindingSource.DataSource = searchedbydate;
-
+			
 			timer1.Start();
 		}
 		private void btnEdit_Click(object sender, EventArgs e)
 		{
 			if (dataGridViewSchedule.SelectedRows.Count > 0)
-				openEditEvent((int)dataGridViewSchedule.SelectedRows[0].Cells[cloumnIdName].Value);
+				openEditEvent((int)dataGridViewSchedule.SelectedRows[0].Cells[CloumnIdName].Value);
 		}
 		private void dataGridViewSchedule_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
 			if (dataGridViewSchedule.SelectedRows.Count > 0)
-				openEditEvent((int)dataGridViewSchedule.SelectedRows[0].Cells[cloumnIdName].Value);
+				openEditEvent((int)dataGridViewSchedule.SelectedRows[0].Cells[CloumnIdName].Value);
 		}
 		private void openEditEvent(int e = int.MinValue)
 		{
 			if (e < 0)
 			{
-				EditEventForm dialog = new EditEventForm(EventList);
+				EditEventForm dialog = new(EventList1);
 
-				dialog.FormClosed += new FormClosedEventHandler(onEventEditForm_Closed);
+				dialog.FormClosed += new(onEventEditForm_Closed);
 				dialog.Show(this);
 			}
 			else
 			{
-				EditEventForm dialog = new EditEventForm(EventList.AllEvents.FirstOrDefault(v => v.Id == e));
+				EditEventForm dialog = new(EventList1.AllEvents.FirstOrDefault(v => v.Id == e));
 
-				dialog.FormClosed += new FormClosedEventHandler(onEventEditForm_Closed);
+				dialog.FormClosed += new(onEventEditForm_Closed);
 				dialog.Show();
 			}
 		}
@@ -121,8 +127,8 @@ namespace ScheduleCurseWork
 		{
 			if (dataGridViewSchedule.SelectedRows.Count > 0)
 			{
-				int curevid = (int)dataGridViewSchedule.SelectedRows[0].Cells[cloumnIdName].Value;
-				EventList.AllEvents.Remove(EventList.AllEvents.FirstOrDefault(v => v.Id == curevid));
+				int curevid = (int)dataGridViewSchedule.SelectedRows[0].Cells[CloumnIdName].Value;
+				EventList1.AllEvents.Remove(EventList1.AllEvents.FirstOrDefault(v => v.Id == curevid));
 			}
 			dataGridViewSchedule.ClearSelection();
 			refreshListOfEvents();
@@ -132,39 +138,33 @@ namespace ScheduleCurseWork
 		{
 			if (dataGridViewSchedule.SelectedRows.Count > 0)
 			{
-				int curevid = (int)dataGridViewSchedule.SelectedRows[0].Cells[cloumnIdName].Value;
+				int curevid = (int)dataGridViewSchedule.SelectedRows[0].Cells[CloumnIdName].Value;
 
-				Event curev = EventList.AllEvents.FirstOrDefault(v => v.Id == curevid);
-				EventList.AllEvents.FirstOrDefault(v => v.Id == curevid).IsDone = !curev.IsDone;
+				Event curev = EventList1.AllEvents.FirstOrDefault(v => v.Id == curevid);
+				EventList1.AllEvents.FirstOrDefault(v => v.Id == curevid).IsDone = !curev.IsDone;
 			}
 			dataGridViewSchedule.ClearSelection();
 			refreshListOfEvents();
 		}
 
-		private void TotalUpdatingEventsHandler(object sender, EventArgs e)
-		{
-			refreshListOfEvents();
-		}
+		private void TotalUpdatingEventsHandler(object sender, EventArgs e) => refreshListOfEvents();
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			if (EventList.AllEventsStatusIsMissedUpdate())
+			if (EventList1.AllEventsStatusIsMissedUpdate())
 			{
 				refreshListOfEvents();
 			}
 			scheduleManagerBindingSource.DataSource = new ScheduleManager();
-			scheduleManagerBindingSource.DataSource = EventList;
+			scheduleManagerBindingSource.DataSource = EventList1;
 		}
 
-		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			EventList.saveData();
-		}
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e) => EventList1.SaveData();
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			EventList = EventList.loadData();
-			if(EventList.AllEvents.Count>0) 
+			EventList1 = EventList1.loadData();
+			if (EventList1.AllEvents.Count > 0)
 				refreshListOfEvents();
 		}
 
@@ -210,12 +210,18 @@ namespace ScheduleCurseWork
 				case Keys.Delete:
 					btnDelete_Click(null, null);
 					break;
+				case Keys.Enter:
+					btnDone_Click(null, null);
+					break;
+				case Keys.Escape:
+					dataGridViewSchedule.ClearSelection();
+					break;
 			}
 		}
 
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			EventList = new ScheduleManager();
+			EventList1 = new ScheduleManager();
 			refreshListOfEvents();
 		}
 
@@ -224,8 +230,9 @@ namespace ScheduleCurseWork
 			if (e.KeyCode == Keys.Escape)
 			{
 				dataGridViewSchedule.Focus();
-			}else if (e.KeyCode == Keys.Enter && (sender is DateTimePicker s)) { s.Focus(); }
-			
+			}
+			else if (e.KeyCode == Keys.Enter && (sender is DateTimePicker s)) { s.Focus(); }
+
 		}
 
 		private void checkboxEscape_KeyDown(object sender, KeyEventArgs e)
@@ -244,12 +251,13 @@ namespace ScheduleCurseWork
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show("You can save and load from top menu and using shortcuts.\n\n\nOwner and developer of this app is Rostyslav Tarasov KNURE student from PZPI-23-8 group");
+			MessageBox.Show("You can save and load from top menu and using shortcuts.\n\n\n" +
+				"Owner and developer of this app is Rostyslav Tarasov KNURE student from PZPI-23-8 group");
 		}
 
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (EventList.checkSave())
+			if (EventList1.checkSave())
 			{
 				return;
 			}
@@ -258,13 +266,25 @@ namespace ScheduleCurseWork
 			switch (result)
 			{
 				case DialogResult.Yes:
-					EventList.saveData();
+					EventList1.SaveData();
 					break;
 				case DialogResult.No:
 					break;
 				case DialogResult.Cancel:
 					e.Cancel = true;
 					break;
+			}
+		}
+		private void ChangeFont(Control.ControlCollection controls, Font newFont)
+		{
+			foreach (Control control in controls)
+			{
+				control.Font = newFont;
+
+				if (control.HasChildren)
+				{
+					ChangeFont(control.Controls, newFont);
+				}
 			}
 		}
 	}

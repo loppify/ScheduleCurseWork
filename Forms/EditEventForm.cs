@@ -6,7 +6,9 @@ namespace ScheduleCurseWork.Forms
 {
 	public partial class EditEventForm : Form
 	{
+		Font defaultFont = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 204);
 		Event curevent;
+		private bool isCloseByBtn = false;
 		bool adding { get; set; } = false;
 		ScheduleManager eventList;
 
@@ -15,7 +17,8 @@ namespace ScheduleCurseWork.Forms
 		public EditEventForm(Event curevent)
 		{
 			InitializeComponent();
-			dateTimePickerDateTime.CustomFormat = @"dddd MMMM dd yyyy    HH:mm";
+			ChangeFont(this.Controls, defaultFont);
+			dateTimePickerDateTime.CustomFormat = @"dddd MMMM d yyyy    HH:mm";
 
 
 			this.curevent = curevent;
@@ -32,12 +35,13 @@ namespace ScheduleCurseWork.Forms
 		{
 			this.eventList = eventList;
 			InitializeComponent();
+			ChangeFont(this.Controls, defaultFont);
 			adding = true;
-			dateTimePickerDateTime.CustomFormat = @"dddd MMMM dd yyyy    HH:mm";
+			dateTimePickerDateTime.CustomFormat = @"dddd MMMM d yyyy    HH:mm";
 
 
 			curevent = new Event();
-			int nextId = eventList.AllEvents.Count>0 ? eventList.AllEvents[^1].Id + 1 : 0;
+			int nextId = eventList.AllEvents.Count > 0 ? eventList.AllEvents[^1].Id + 1 : 0;
 			textBoxTitle.Text = $"Title {nextId}";
 			textBoxDescription.Text = $"Description {nextId}";
 			textBoxEventLocation.Text = $"Location {nextId}";
@@ -63,6 +67,7 @@ namespace ScheduleCurseWork.Forms
 				curevent.Duration = duration;
 				curevent.DateOfStarting = dateOfStarting;
 			}
+			isCloseByBtn = true;
 			Close();
 		}
 		private int ParseStringToDuration(string duration)
@@ -73,6 +78,7 @@ namespace ScheduleCurseWork.Forms
 		}
 		private void button2_Click(object sender, EventArgs e)
 		{
+			isCloseByBtn = true;
 			Close();
 		}
 
@@ -84,7 +90,7 @@ namespace ScheduleCurseWork.Forms
 				MessageBox.Show("Title can't be empty.");
 				e.Cancel = true;
 			}
-			else { titleValid.Visible = false;  }
+			else { titleValid.Visible = false; }
 		}
 
 		private void textBoxDescription_Validating(object sender, CancelEventArgs e)
@@ -95,7 +101,7 @@ namespace ScheduleCurseWork.Forms
 				MessageBox.Show("Desscription can't be empty.");
 				e.Cancel = true;
 			}
-			else { descriptionValid.Visible = false;  }
+			else { descriptionValid.Visible = false; }
 		}
 
 		private void textBoxEventLocation_Validating(object sender, CancelEventArgs e)
@@ -105,9 +111,9 @@ namespace ScheduleCurseWork.Forms
 				locationValid.Visible = true;
 				MessageBox.Show("Location can't be empty.");
 				e.Cancel = true;
-				
+
 			}
-			else { locationValid.Visible = false;  }
+			else { locationValid.Visible = false; }
 		}
 
 		private void dateTimePickerDateTime_Validating(object sender, CancelEventArgs e)
@@ -139,7 +145,7 @@ namespace ScheduleCurseWork.Forms
 			int hours = Math.Min(timeInput / 10000, 24);
 			int minutes = Math.Min((timeInput / 100) % 100, 59);
 			int seconds = Math.Min(timeInput % 100, 59);
-			
+
 
 			dateTimePickerDuration.TextChanged -= dateTimePickerDuration_TextChanged;
 			dateTimePickerDuration.Text = $"{hours:00}:{minutes:00}:{seconds:00}";
@@ -173,9 +179,11 @@ namespace ScheduleCurseWork.Forms
 
 		private void textBoxTitle_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.KeyCode == Keys.Escape)
+			switch (e.KeyCode)
 			{
-				panel1.Focus();
+				case Keys.Escape:
+					panel1.Focus();
+					break;
 			}
 		}
 
@@ -185,6 +193,49 @@ namespace ScheduleCurseWork.Forms
 			{
 				Close();
 			}
+		}
+		private void ChangeFont(Control.ControlCollection controls, Font newFont)
+		{
+			foreach (Control control in controls)
+			{
+				control.Font = newFont;
+
+				if (control.HasChildren)
+				{
+					ChangeFont(control.Controls, newFont);
+				}
+			}
+		}
+
+		private void EditEventForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (!isCloseByBtn)
+			{
+				string title = textBoxTitle.Text;
+				string location = textBoxEventLocation.Text;
+				string description = textBoxDescription.Text;
+				DateTime dateOfStarting = dateTimePickerDateTime.Value;
+				int duration = ParseStringToDuration(dateTimePickerDuration_Text());
+				if (curevent.Title == title &&
+				curevent.Description == description &&
+				curevent.Location == location &&
+				curevent.Duration == duration &&
+				curevent.DateOfStarting == dateOfStarting)
+				{
+					return;
+				}
+				DialogResult result = MessageBox.Show("Are you sure to leave? Data will not be saved.", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+				switch (result)
+				{
+					case DialogResult.Yes:
+						break;
+					case DialogResult.No:
+						e.Cancel = true;
+						break;
+				}
+			}
+
 		}
 	}
 }

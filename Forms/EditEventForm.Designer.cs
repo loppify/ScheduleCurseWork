@@ -43,8 +43,8 @@
 			textBoxTitle = new TextBox();
 			label2 = new Label();
 			label1 = new Label();
-			button2 = new Button();
-			button1 = new Button();
+			cancelBtn = new Button();
+			okBtn = new Button();
 			panel1.SuspendLayout();
 			SuspendLayout();
 			// 
@@ -65,8 +65,8 @@
 			panel1.Controls.Add(textBoxTitle);
 			panel1.Controls.Add(label2);
 			panel1.Controls.Add(label1);
-			panel1.Controls.Add(button2);
-			panel1.Controls.Add(button1);
+			panel1.Controls.Add(cancelBtn);
+			panel1.Controls.Add(okBtn);
 			panel1.Dock = DockStyle.Fill;
 			panel1.Location = new Point(0, 0);
 			panel1.Margin = new Padding(0);
@@ -78,6 +78,7 @@
 			// 
 			// dateTimePickerDuration
 			// 
+			dateTimePickerDuration.Anchor = AnchorStyles.Top;
 			dateTimePickerDuration.Font = new Font("Segoe UI", 18F);
 			dateTimePickerDuration.Location = new Point(53, 813);
 			dateTimePickerDuration.Mask = "00:00:00";
@@ -145,6 +146,7 @@
 			// 
 			// dateTimePickerDateTime
 			// 
+			dateTimePickerDateTime.Anchor = AnchorStyles.Top;
 			dateTimePickerDateTime.CalendarFont = new Font("Segoe UI", 18F);
 			dateTimePickerDateTime.CalendarForeColor = Color.Lime;
 			dateTimePickerDateTime.CalendarMonthBackground = Color.FromArgb(23, 23, 23);
@@ -169,6 +171,7 @@
 			textBoxEventLocation.ForeColor = Color.Lime;
 			textBoxEventLocation.Location = new Point(153, 498);
 			textBoxEventLocation.Margin = new Padding(100, 0, 100, 30);
+			textBoxEventLocation.MaxLength = 50;
 			textBoxEventLocation.Name = "textBoxEventLocation";
 			textBoxEventLocation.Size = new Size(644, 55);
 			textBoxEventLocation.TabIndex = 2;
@@ -183,6 +186,7 @@
 			textBoxDescription.ForeColor = Color.Lime;
 			textBoxDescription.Location = new Point(153, 342);
 			textBoxDescription.Margin = new Padding(100, 0, 100, 30);
+			textBoxDescription.MaxLength = 270;
 			textBoxDescription.Name = "textBoxDescription";
 			textBoxDescription.Size = new Size(644, 55);
 			textBoxDescription.TabIndex = 1;
@@ -239,6 +243,7 @@
 			textBoxTitle.ForeColor = Color.Lime;
 			textBoxTitle.Location = new Point(153, 186);
 			textBoxTitle.Margin = new Padding(100, 0, 100, 30);
+			textBoxTitle.MaxLength = 50;
 			textBoxTitle.Name = "textBoxTitle";
 			textBoxTitle.Size = new Size(644, 55);
 			textBoxTitle.TabIndex = 0;
@@ -263,7 +268,7 @@
 			// 
 			label1.BackColor = Color.Transparent;
 			label1.Dock = DockStyle.Top;
-			label1.Font = new Font("Segoe UI", 18F);
+			label1.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 204);
 			label1.ForeColor = Color.Lime;
 			label1.Location = new Point(30, 30);
 			label1.Margin = new Padding(0);
@@ -273,43 +278,46 @@
 			label1.Text = "Your event";
 			label1.TextAlign = ContentAlignment.TopCenter;
 			// 
-			// button2
+			// cancelBtn
 			// 
-			button2.Anchor = AnchorStyles.Top;
-			button2.AutoSize = true;
-			button2.Font = new Font("Segoe UI", 18F);
-			button2.Location = new Point(598, 1111);
-			button2.Margin = new Padding(0, 0, 30, 0);
-			button2.Name = "button2";
-			button2.Size = new Size(146, 51);
-			button2.TabIndex = 5;
-			button2.Text = "Cancel";
-			button2.UseVisualStyleBackColor = true;
-			button2.Click += button2_Click;
+			cancelBtn.Anchor = AnchorStyles.Top;
+			cancelBtn.AutoSize = true;
+			cancelBtn.Font = new Font("Segoe UI", 18F);
+			cancelBtn.Location = new Point(598, 1111);
+			cancelBtn.Margin = new Padding(0, 0, 30, 0);
+			cancelBtn.Name = "cancelBtn";
+			cancelBtn.Size = new Size(146, 51);
+			cancelBtn.TabIndex = 5;
+			cancelBtn.Text = "Cancel";
+			cancelBtn.UseVisualStyleBackColor = true;
+			cancelBtn.Click += button2_Click;
 			// 
-			// button1
+			// okBtn
 			// 
-			button1.Anchor = AnchorStyles.Top;
-			button1.AutoSize = true;
-			button1.Font = new Font("Segoe UI", 18F);
-			button1.Location = new Point(774, 1111);
-			button1.Margin = new Padding(0);
-			button1.Name = "button1";
-			button1.Size = new Size(146, 51);
-			button1.TabIndex = 6;
-			button1.Text = "OK";
-			button1.UseVisualStyleBackColor = true;
-			button1.Click += button1_Click;
+			okBtn.Anchor = AnchorStyles.Top;
+			okBtn.AutoSize = true;
+			okBtn.Font = new Font("Segoe UI", 18F);
+			okBtn.Location = new Point(774, 1111);
+			okBtn.Margin = new Padding(0);
+			okBtn.Name = "okBtn";
+			okBtn.Size = new Size(146, 51);
+			okBtn.TabIndex = 6;
+			okBtn.Text = "OK";
+			okBtn.UseVisualStyleBackColor = true;
+			okBtn.Click += button1_Click;
 			// 
 			// EditEventForm
 			// 
 			AutoScaleDimensions = new SizeF(10F, 21F);
 			AutoScaleMode = AutoScaleMode.Font;
+			AutoSize = true;
 			CausesValidation = false;
 			ClientSize = new Size(950, 1192);
 			Controls.Add(panel1);
+			MinimumSize = new Size(972, 1248);
 			Name = "EditEventForm";
 			Text = "EventForm";
+			FormClosing += EditEventForm_FormClosing;
 			panel1.ResumeLayout(false);
 			panel1.PerformLayout();
 			ResumeLayout(false);
@@ -320,8 +328,8 @@
 		private Panel panel1;
 		private Label label2;
 		private Label label1;
-		private Button button2;
-		private Button button1;
+		private Button cancelBtn;
+		private Button okBtn;
 		private TextBox textBoxEventLocation;
 		private TextBox textBoxDescription;
 		private Label label4;
