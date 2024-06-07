@@ -80,11 +80,11 @@
 			// 
 			dateTimePickerDuration.Anchor = AnchorStyles.Top;
 			dateTimePickerDuration.Font = new Font("Segoe UI", 18F);
-			dateTimePickerDuration.Location = new Point(53, 813);
+			dateTimePickerDuration.Location = new Point(153, 813);
 			dateTimePickerDuration.Mask = "00:00:00";
 			dateTimePickerDuration.Name = "dateTimePickerDuration";
 			dateTimePickerDuration.PromptChar = '0';
-			dateTimePickerDuration.Size = new Size(844, 55);
+			dateTimePickerDuration.Size = new Size(644, 55);
 			dateTimePickerDuration.TabIndex = 4;
 			dateTimePickerDuration.TextAlign = HorizontalAlignment.Center;
 			dateTimePickerDuration.TextChanged += dateTimePickerDuration_TextChanged;
@@ -155,10 +155,10 @@
 			dateTimePickerDateTime.DropDownAlign = LeftRightAlignment.Right;
 			dateTimePickerDateTime.Font = new Font("Segoe UI", 18F);
 			dateTimePickerDateTime.Format = DateTimePickerFormat.Custom;
-			dateTimePickerDateTime.Location = new Point(53, 654);
+			dateTimePickerDateTime.Location = new Point(153, 654);
 			dateTimePickerDateTime.Margin = new Padding(0, 0, 0, 30);
 			dateTimePickerDateTime.Name = "dateTimePickerDateTime";
-			dateTimePickerDateTime.Size = new Size(844, 55);
+			dateTimePickerDateTime.Size = new Size(644, 55);
 			dateTimePickerDateTime.TabIndex = 3;
 			dateTimePickerDateTime.KeyDown += textBoxTitle_KeyDown;
 			dateTimePickerDateTime.Validating += dateTimePickerDateTime_Validating;

@@ -15,12 +15,13 @@ namespace ScheduleCurseWork
 		public Font DefaultFont1 { get => defaultFont; set => defaultFont = value; }
 		public static string CloumnIdName { get => cloumnIdName; set => cloumnIdName = value; }
 		public static string DateTimeFormat { get => dateTimeFormat; set => dateTimeFormat = value; }
-		public ScheduleManager EventList1 { get => eventList; set => eventList = value; }
+		public ScheduleManager EventList { get => eventList; set => eventList = value; }
 		public DateTime Dtfilter { get => dtfilter; set => dtfilter = value; }
 
 		public MainForm()
 		{
 			InitializeComponent();
+			this.KeyPreview = true;
 			ChangeFont(Controls, DefaultFont1);
 
 			dateTimePickerFilter.CustomFormat = DateTimeFormat;
@@ -43,9 +44,10 @@ namespace ScheduleCurseWork
 			{
 				Dtfilter = DateTime.MinValue;
 			}
-			List<Event> searchedbydate = EventList1.EventFilter(Dtfilter, checkboxShowAllEvents.Checked, checkBoxOverlappingEvents.Checked);
+			List<Event> searchedbydate = EventList.EventFilter(Dtfilter, checkboxShowAllEvents.Checked, checkBoxOverlappingEvents.Checked);
 			eventBindingSource.DataSource = searchedbydate;
-			
+			try { EventList.SearchNearest(true); }
+			catch { }
 			timer1.Start();
 		}
 		private void btnEdit_Click(object sender, EventArgs e)
@@ -62,14 +64,14 @@ namespace ScheduleCurseWork
 		{
 			if (e < 0)
 			{
-				EditEventForm dialog = new(EventList1);
+				EditEventForm dialog = new(EventList);
 
 				dialog.FormClosed += new(onEventEditForm_Closed);
 				dialog.Show(this);
 			}
 			else
 			{
-				EditEventForm dialog = new(EventList1.AllEvents.FirstOrDefault(v => v.Id == e));
+				EditEventForm dialog = new(EventList.AllEvents.FirstOrDefault(v => v.Id == e));
 
 				dialog.FormClosed += new(onEventEditForm_Closed);
 				dialog.Show();
@@ -101,6 +103,7 @@ namespace ScheduleCurseWork
 				if (e.Value != null && (bool)e.Value)
 				{
 					dataGridViewSchedule.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(23, 100, 23);
+					dataGridViewSchedule.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.FromArgb(23 + 17, 100 + 17, 23 + 17);
 				}
 			}
 			if (dataGridViewSchedule.Columns[e.ColumnIndex].Name == "isMissedDataGridViewCheckBoxColumn" &&
@@ -109,6 +112,7 @@ namespace ScheduleCurseWork
 				if (e.Value != null && (bool)e.Value)
 				{
 					dataGridViewSchedule.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(100, 23, 23);
+					dataGridViewSchedule.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.FromArgb(100 + 17, 23 + 17, 23 + 17);
 				}
 			}
 		}
@@ -128,7 +132,7 @@ namespace ScheduleCurseWork
 			if (dataGridViewSchedule.SelectedRows.Count > 0)
 			{
 				int curevid = (int)dataGridViewSchedule.SelectedRows[0].Cells[CloumnIdName].Value;
-				EventList1.AllEvents.Remove(EventList1.AllEvents.FirstOrDefault(v => v.Id == curevid));
+				EventList.AllEvents.Remove(EventList.AllEvents.FirstOrDefault(v => v.Id == curevid));
 			}
 			dataGridViewSchedule.ClearSelection();
 			refreshListOfEvents();
@@ -140,8 +144,8 @@ namespace ScheduleCurseWork
 			{
 				int curevid = (int)dataGridViewSchedule.SelectedRows[0].Cells[CloumnIdName].Value;
 
-				Event curev = EventList1.AllEvents.FirstOrDefault(v => v.Id == curevid);
-				EventList1.AllEvents.FirstOrDefault(v => v.Id == curevid).IsDone = !curev.IsDone;
+				Event curev = EventList.AllEvents.FirstOrDefault(v => v.Id == curevid);
+				EventList.AllEvents.FirstOrDefault(v => v.Id == curevid).IsDone = !curev.IsDone;
 			}
 			dataGridViewSchedule.ClearSelection();
 			refreshListOfEvents();
@@ -151,20 +155,20 @@ namespace ScheduleCurseWork
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			if (EventList1.AllEventsStatusIsMissedUpdate())
+			if (EventList.AllEventsStatusIsMissedUpdate())
 			{
 				refreshListOfEvents();
 			}
 			scheduleManagerBindingSource.DataSource = new ScheduleManager();
-			scheduleManagerBindingSource.DataSource = EventList1;
+			scheduleManagerBindingSource.DataSource = EventList;
 		}
 
-		private void saveToolStripMenuItem_Click(object sender, EventArgs e) => EventList1.SaveData();
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e) => EventList.SaveData();
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			EventList1 = EventList1.loadData();
-			if (EventList1.AllEvents.Count > 0)
+			EventList = EventList.loadData();
+			if (EventList.AllEvents.Count > 0)
 				refreshListOfEvents();
 		}
 
@@ -209,9 +213,11 @@ namespace ScheduleCurseWork
 					break;
 				case Keys.Delete:
 					btnDelete_Click(null, null);
+					e.Handled = true;
 					break;
 				case Keys.Enter:
 					btnDone_Click(null, null);
+					e.Handled = true;
 					break;
 				case Keys.Escape:
 					dataGridViewSchedule.ClearSelection();
@@ -221,8 +227,18 @@ namespace ScheduleCurseWork
 
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			EventList1 = new ScheduleManager();
-			refreshListOfEvents();
+			DialogResult result = MessageBox.Show("It will replace your current cheldue. Do you want to continue?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+			switch (result)
+			{
+				case DialogResult.Yes:
+					EventList = new ScheduleManager();
+					refreshListOfEvents();
+					break;
+				case DialogResult.No:
+					break;
+			}
+
 		}
 
 		private void btnDone_KeyDown(object sender, KeyEventArgs e)
@@ -257,7 +273,7 @@ namespace ScheduleCurseWork
 
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (EventList1.checkSave())
+			if (EventList.checkSave())
 			{
 				return;
 			}
@@ -266,7 +282,7 @@ namespace ScheduleCurseWork
 			switch (result)
 			{
 				case DialogResult.Yes:
-					EventList1.SaveData();
+					EventList.SaveData();
 					break;
 				case DialogResult.No:
 					break;
@@ -285,6 +301,18 @@ namespace ScheduleCurseWork
 				{
 					ChangeFont(control.Controls, newFont);
 				}
+			}
+		}
+
+		private void MainForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.F1)
+			{
+				aboutToolStripMenuItem_Click((Control)sender, e);
+			}
+			else
+			{
+				dataGridViewSchedule_KeyDown(sender, e);
 			}
 		}
 	}

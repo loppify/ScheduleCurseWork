@@ -79,7 +79,7 @@ namespace ScheduleCurseWork.Models
 			}
 			return mergedSM;
 		}*/
-		
+
 		/// <summary>
 		/// Зміна стану "пропущено" для заходів
 		/// </summary>
@@ -103,6 +103,12 @@ namespace ScheduleCurseWork.Models
 						result = true;
 
 					}
+					else if (ev.DateOfStarting > DateTime.Now && ev.IsMissed) // Захід було перенесено
+					{
+						// Поміка, що захід пропущено вимикається і результат обходу true для оновлення таблиці заходів
+						ev.IsMissed = false;
+						result = true;
+					}
 					// Умова видалення заходу, який було просрочено минулого дня і не помічено як "виконано"
 					if (ev.DateOfStarting.AddDays(1).Date == DateTime.Now.Date && !ev.IsDone)
 					{
@@ -113,7 +119,7 @@ namespace ScheduleCurseWork.Models
 				}
 			}
 			catch (InvalidOperationException) { } // Ловимо виняток 
-			// Повертаємо результат обходу для оновлення таблиці заходів
+												  // Повертаємо результат обходу для оновлення таблиці заходів
 			return result;
 
 		}
@@ -189,43 +195,33 @@ namespace ScheduleCurseWork.Models
 		/// <summary>
 		/// Пошук найближчого заходу
 		/// </summary>
-		/// <returns>Повертає найближчий захід</returns>
+		/// <returns>Найближчий <see cref="Event"/></returns>
 		/// <exception cref="NoNearestEventException"></exception>
-		public Event SearchNearest()
+		public Event SearchNearest(bool changed)
 		{
 			// Перевірка актуальності найближчого заходу, тобто якщо найближчий захід:
 			// ще не визначений
 			// пропущений
 			// зроблений
 			// не міститься у колекції всіх заходів
-			if (NearestEvent == null || NearestEvent.IsMissed || NearestEvent.IsDone || !AllEvents.Contains(NearestEvent))
+			if (NearestEvent == null || NearestEvent.IsMissed || NearestEvent.IsDone || !AllEvents.Contains(NearestEvent) || changed)
 			{
-				// Створюємо нову колекцію відсортованих заходів за умовами (для детального пояснення дивись параметри методу EventFilter()):
-				// без сортування по даті 
-				// без виконаних і пропущених заходів
-				// вимкнений режим "накладок"
-				// І сотуємо цю колекцію за датою початку заходу
-				List<Event> sortedEvents = EventFilter(DateTime.MinValue, false, false).OrderBy(v=>v.DateOfStarting).ToList();
-
-
-				// Цикл проходу по створеній колекції відсортованих заходів
-				foreach (var e in sortedEvents)
+				// Створюємо нову колекцію відфільтрованих від виконаних і пропущених заходів в порядку зростання по даті
+				List<Event> sortedEvents = AllEvents.Where(v => !v.IsMissed && !v.IsDone).OrderBy(v => v.DateOfStarting).ToList();
+				// Якщо є заходи, відповідаюсі умовам
+				if (sortedEvents.Count > 0)
 				{
-					// Якщо захід не пропущено і не зроблено
-					if (!e.IsMissed && !e.IsDone)
-					{
-						// Присвоюємо поточний найблмжчий захід
-						NearestEvent = e;
-						// Перериваємо цикл повертанням новим поточним заходом
-						return NearestEvent;
-					}
+					// Присвоюємо поточний найблмжчий захід
+					NearestEvent = sortedEvents[0];
+					// Повертаємо новий поточний захід
+					return NearestEvent;
 				}
 				throw new NoNearestEventException(); // Викидаємо виняток про відсутність найближчого заходу
 			}
 			// Повертаємо поточний найближчий захід, якщо він не змінився
 			return NearestEvent;
 		}
-		
+
 		[JsonIgnore]
 		public string SearchNearestString
 		{
@@ -233,7 +229,7 @@ namespace ScheduleCurseWork.Models
 			{
 				try
 				{
-					NearestEvent = SearchNearest();
+					NearestEvent = SearchNearest(false);
 				}
 				catch (NoNearestEventException ex) { return ex.Message; }
 				return $"{NearestEvent.Title}\n" +
@@ -271,7 +267,7 @@ namespace ScheduleCurseWork.Models
 			int hours = Math.Min(duration.Hours, 99); // змінна годин
 			int minutes = Math.Min(duration.Minutes, 59); // змінна хвилин
 			int seconds = Math.Min(duration.Seconds, 59); // змінна секунд
-			// Повертає зформовану стрічку
+														  // Повертає зформовану стрічку
 			return $"{hours:00}:{minutes:00}:{seconds:00}";
 		}
 		/// <summary>
@@ -323,8 +319,9 @@ namespace ScheduleCurseWork.Models
 			{
 				// Сповіщення про відсутність файлу
 				MessageBox.Show("Save hasn't been found.");
-				
-			}catch (JsonException) // При пошкодженому файлі
+
+			}
+			catch (JsonException) // При пошкодженому файлі
 			{
 				// Сповіщення про пошкождення файлу
 				MessageBox.Show("Save file was damaged.");
@@ -350,7 +347,7 @@ namespace ScheduleCurseWork.Models
 			// Перевірка наявності класу
 			if (this == null) return false; // Якщо клас путий - повертаємо false
 			string jsonString = ""; // Створюємо змінну для збереження вигружених даних з файлу збереження
-			
+
 			// Присвоюємо змінній дані поточного класу у форматі .json
 			jsonString = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
 			try
@@ -363,7 +360,7 @@ namespace ScheduleCurseWork.Models
 				}
 			}
 			catch (FileNotFoundException) { } // Файл не було знайдено
-			// повертаємо false
+											  // повертаємо false
 			return false;
 		}
 	}

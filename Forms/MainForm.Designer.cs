@@ -109,6 +109,7 @@
 			dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(40, 40, 40);
 			dataGridViewCellStyle1.SelectionForeColor = Color.Lime;
 			dataGridViewSchedule.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewSchedule.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			dataGridViewSchedule.AutoGenerateColumns = false;
 			dataGridViewSchedule.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 			dataGridViewSchedule.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
@@ -120,7 +121,6 @@
 			dataGridViewSchedule.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			dataGridViewSchedule.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, dataGridViewTextBoxColumn1, locationDataGridViewTextBoxColumn, durationDataGridViewTextBoxColumn, DateOfStarting, descriptionDataGridViewTextBoxColumn, isDoneDataGridViewCheckBoxColumn, isMissedDataGridViewCheckBoxColumn });
 			dataGridViewSchedule.DataSource = eventBindingSource;
-			dataGridViewSchedule.Dock = DockStyle.Top;
 			dataGridViewSchedule.GridColor = SystemColors.Desktop;
 			dataGridViewSchedule.Location = new Point(30, 60);
 			dataGridViewSchedule.Margin = new Padding(0, 0, 0, 30);
@@ -422,16 +422,15 @@
 			// 
 			checkBoxFilter.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 			checkBoxFilter.AutoSize = true;
-			checkBoxFilter.BackColor = Color.Silver;
+			checkBoxFilter.BackColor = Color.Transparent;
 			checkBoxFilter.Cursor = Cursors.Hand;
 			checkBoxFilter.Font = new Font("Segoe UI Semilight", 18F);
 			checkBoxFilter.ForeColor = Color.Lime;
-			checkBoxFilter.Image = Properties.Resources.Unchecked;
-			checkBoxFilter.Location = new Point(272, 117);
+			checkBoxFilter.Location = new Point(272, 131);
 			checkBoxFilter.Margin = new Padding(0, 0, 0, 30);
 			checkBoxFilter.Name = "checkBoxFilter";
 			checkBoxFilter.RightToLeft = RightToLeft.No;
-			checkBoxFilter.Size = new Size(70, 48);
+			checkBoxFilter.Size = new Size(22, 21);
 			checkBoxFilter.TabIndex = 4;
 			checkBoxFilter.TextAlign = ContentAlignment.MiddleCenter;
 			checkBoxFilter.UseVisualStyleBackColor = false;
@@ -592,6 +591,7 @@
 			StartPosition = FormStartPosition.CenterScreen;
 			Text = "Schedule";
 			FormClosing += MainForm_FormClosing;
+			KeyDown += MainForm_KeyDown;
 			BackgroundPanel.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)dataGridViewSchedule).EndInit();
 			((System.ComponentModel.ISupportInitialize)eventBindingSource).EndInit();
