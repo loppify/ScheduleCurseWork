@@ -110,7 +110,7 @@ namespace ScheduleCurseWork.Models
 						result = true;
 					}
 					// Умова видалення заходу, який було просрочено минулого дня і не помічено як "виконано"
-					if (ev.DateOfStarting.AddDays(1).Date == DateTime.Now.Date && !ev.IsDone)
+					if (ev.DateOfStarting.AddDays(1).Date < DateTime.Now.Date && !ev.IsDone)
 					{
 						// Видалення заходу з колекції із результатом обходу для оновлення таблиці заходів
 						AllEvents.Remove(ev);
@@ -318,7 +318,8 @@ namespace ScheduleCurseWork.Models
 			catch (FileNotFoundException) // При відсутності потрібного файлу
 			{
 				// Сповіщення про відсутність файлу
-				MessageBox.Show("Save hasn't been found.");
+				MessageBox.Show("Save hasn't been found. Creating new...");
+				SaveData();
 
 			}
 			catch (JsonException) // При пошкодженому файлі
@@ -331,7 +332,7 @@ namespace ScheduleCurseWork.Models
 					// Зберегаємо поточний клас
 					SaveData();
 					// Повідомляємо про зберігання у порожній файл поточного класу
-					MessageBox.Show("Save file was empty. Saving current data.");
+					MessageBox.Show("Save file was empty. Saving current data...");
 				}
 			}
 			// Повертаємо новий менеджер заходів, якщо не було виявлено збережених даних

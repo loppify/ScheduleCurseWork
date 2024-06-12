@@ -66,8 +66,6 @@
 			openToolStripMenuItem = new ToolStripMenuItem();
 			toolStripSeparator = new ToolStripSeparator();
 			saveToolStripMenuItem = new ToolStripMenuItem();
-			saveAsToolStripMenuItem = new ToolStripMenuItem();
-			toolStripSeparator1 = new ToolStripSeparator();
 			toolStripSeparator2 = new ToolStripSeparator();
 			exitToolStripMenuItem = new ToolStripMenuItem();
 			helpToolStripMenuItem = new ToolStripMenuItem();
@@ -492,7 +490,7 @@
 			// 
 			// fileToolStripMenuItem
 			// 
-			fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, toolStripSeparator2, exitToolStripMenuItem });
+			fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
 			fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			fileToolStripMenuItem.Size = new Size(74, 36);
 			fileToolStripMenuItem.Text = "&File";
@@ -531,17 +529,6 @@
 			saveToolStripMenuItem.Size = new Size(282, 40);
 			saveToolStripMenuItem.Text = "&Save";
 			saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
-			// 
-			// saveAsToolStripMenuItem
-			// 
-			saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			saveAsToolStripMenuItem.Size = new Size(282, 40);
-			saveAsToolStripMenuItem.Text = "Save &As";
-			// 
-			// toolStripSeparator1
-			// 
-			toolStripSeparator1.Name = "toolStripSeparator1";
-			toolStripSeparator1.Size = new Size(279, 6);
 			// 
 			// toolStripSeparator2
 			// 
@@ -614,8 +601,6 @@
 		private ToolStripMenuItem openToolStripMenuItem;
 		private ToolStripSeparator toolStripSeparator;
 		private ToolStripMenuItem saveToolStripMenuItem;
-		private ToolStripMenuItem saveAsToolStripMenuItem;
-		private ToolStripSeparator toolStripSeparator1;
 		private ToolStripSeparator toolStripSeparator2;
 		private ToolStripMenuItem exitToolStripMenuItem;
 		private ToolStripMenuItem helpToolStripMenuItem;
